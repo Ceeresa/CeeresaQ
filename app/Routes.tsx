@@ -16,11 +16,23 @@ const CounterPage = (props: Record<string, any>) => (
   </React.Suspense>
 );
 
+// Lazily load routes and code split with webpacck
+const LazyTablePage = React.lazy(() =>
+  import(/* webpackChunkName: "CounterPage" */ './containers/TablePage')
+);
+
+const TablePage = (props: Record<string, any>) => (
+  <React.Suspense fallback={<h1>Loading...</h1>}>
+    <LazyTablePage {...props} />
+  </React.Suspense>
+);
+
 export default function Routes() {
   return (
     <App>
       <Switch>
         <Route path={routes.COUNTER} component={CounterPage} />
+        <Route path={routes.TABLE} component={TablePage} />
         <Route path={routes.HOME} component={HomePage} />
       </Switch>
     </App>
