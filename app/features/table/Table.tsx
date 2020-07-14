@@ -1,5 +1,6 @@
 import React from 'react';
 import MaterialTable from 'material-table';
+import Highlight from 'react-highlight.js';
 
 export default function Table() {
   return (
@@ -12,24 +13,37 @@ export default function Table() {
           {
             title: 'Tags',
             field: 'tags',
-            lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+            type: 'string',
+            lookup: { MySQL: 'MySQL', BigQuery: 'BigQuery' },
           },
-          { title: 'SQL', field: 'query', type: 'string' },
+          {
+            title: 'SQL',
+            field: 'query',
+            type: 'string',
+            // eslint-disable-next-line react/display-name
+            render: (rowData) => (
+              <div>
+                <Highlight language="SQL">{rowData.query}</Highlight>
+              </div>
+            ),
+          },
         ]}
         data={[
           {
-            id: 'Mehmet',
-            title: 'Baran',
+            id: '1',
+            title: 'Just a test',
             description: 'Description 1',
-            tags: 1987,
+            tags: 'MySQL',
             query: 'SELECT * FROM test',
           },
           {
-            id: 'Gigi',
-            title: 'Valli',
-            description: 'Description 2',
-            tags: 1999,
-            query: 'SELECT * FROM just_another_test',
+            id: '2',
+            title: 'Retrieve 1970 people from New York',
+            description:
+              'You have to find all the people to target for a particular campaign',
+            tags: 'BigQuery',
+            query:
+              "SELECT *\nFROM just_another_test\nWHERE age >= 50 AND city = 'New York'",
           },
         ]}
         options={{
