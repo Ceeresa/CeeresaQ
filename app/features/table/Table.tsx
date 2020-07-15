@@ -51,6 +51,7 @@ export default function Table() {
         data={data}
         options={{
           filtering: true,
+          showTitle: false,
         }}
         editable={{
           onRowAddCancelled: (rowData) =>
