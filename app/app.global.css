@@ -3,10 +3,9 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 @import '~@fortawesome/fontawesome-free/css/all.css';
-
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
-
 @import 'https://highlightjs.org/static/demo/styles/vs.css';
+@import '~codemirror/lib/codemirror.css';
 
 body {
   position: relative;
