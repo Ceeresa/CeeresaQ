@@ -6,6 +6,7 @@
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 @import 'https://highlightjs.org/static/demo/styles/vs.css';
 @import '~codemirror/lib/codemirror.css';
+@import '~codemirror/theme/material.css';
 
 body {
   position: relative;
