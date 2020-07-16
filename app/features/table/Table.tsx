@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import MaterialTable from 'material-table';
+import MaterialTable, { EditComponentProps } from 'material-table';
 import Highlight from 'react-highlight.js';
+import { UnControlled as CodeMirror } from 'react-codemirror2';
+
+require('codemirror/mode/sql/sql');
+
+type RowData = {
+  id: string;
+  title: string;
+  description: string;
+  tags: string;
+  query: string;
+};
 
 export default function Table() {
-  const [columns, setColums] = useState([
+  const [columns] = useState([
     { title: 'Id', field: 'id', type: 'string', editable: 'never' },
     { title: 'Title', field: 'title', type: 'string' },
     { title: 'Description', field: 'description', type: 'string' },
@@ -18,11 +29,26 @@ export default function Table() {
       field: 'query',
       type: 'string',
       // eslint-disable-next-line react/display-name
-      render: (rowData) => (
+      render: (rowData: RowData) => (
         <div>
           <Highlight language="SQL">{rowData.query}</Highlight>
         </div>
       ),
+      // eslint-disable-next-line react/display-name
+      editComponent: (props: EditComponentProps<RowData>) => {
+        const { value } = props;
+        return (
+          <div>
+            <CodeMirror
+              value={value}
+              autoCursor={false}
+              onChange={(_editor, _data, internalValue) => {
+                props.onChange(internalValue);
+              }}
+            />
+          </div>
+        );
+      },
     },
   ]);
 
