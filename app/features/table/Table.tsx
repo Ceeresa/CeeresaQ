@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import MaterialTable, { EditComponentProps } from 'material-table';
 import Highlight from 'react-highlight.js';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 
 require('codemirror/mode/sql/sql');
 
@@ -14,6 +23,16 @@ type RowData = {
 };
 
 export default function Table() {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const [columns] = useState([
     { title: 'Id', field: 'id', type: 'string', editable: 'never' },
     { title: 'Title', field: 'title', type: 'string' },
@@ -25,7 +44,7 @@ export default function Table() {
       lookup: { MySQL: 'MySQL', BigQuery: 'BigQuery' },
     },
     {
-      title: 'SQL',
+      title: 'Query',
       field: 'query',
       type: 'string',
       // eslint-disable-next-line react/display-name
@@ -70,6 +89,16 @@ export default function Table() {
         "SELECT *\nFROM just_another_test\nWHERE age >= 50 AND city = 'New York'",
     },
   ]);
+
+  const [formData, changeFormData] = useState({
+    id: '',
+    description: '',
+    tags: '',
+    query: '',
+  });
+
+  const { id, description, tags, query } = formData;
+
   return (
     <div style={{ maxWidth: '100%' }}>
       <MaterialTable
@@ -79,6 +108,17 @@ export default function Table() {
           filtering: true,
           showTitle: false,
         }}
+        actions={[
+          {
+            icon: 'edit',
+            tooltip: 'Edit',
+            onClick: (_event, rowData) => {
+              changeFormData(rowData);
+              handleClickOpen();
+            },
+          },
+        ]}
+        /*
         editable={{
           onRowAddCancelled: (rowData) =>
             // eslint-disable-next-line no-console
@@ -117,8 +157,80 @@ export default function Table() {
               }, 1000);
             }),
         }}
+        */
         title="Ceeresa"
       />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xl"
+        fullWidth
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" style={{ color: 'red !important' }}>
+          Edit
+        </DialogTitle>
+        <DialogContent>
+          <Grid container>
+            <Grid item xs={3}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="id"
+                label="Id"
+                type="text"
+                value={id}
+                fullWidth
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                id="description"
+                label="Description"
+                type="text"
+                value={description}
+                multiline
+                rows={4}
+                fullWidth
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
+                id="tags"
+                label="Tags"
+                type="text"
+                value={tags}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <FormControl style={{ width: '100%' }}>
+                <InputLabel htmlFor="component-helper">Query</InputLabel>
+                <CodeMirror
+                  value={query}
+                  autoCursor={false}
+                  options={{
+                    mode: 'sql',
+                    theme: 'material',
+                    // lineNumbers: true,
+                  }}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
