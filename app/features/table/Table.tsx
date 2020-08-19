@@ -23,16 +23,6 @@ type RowData = {
 };
 
 export default function Table() {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const [columns] = useState([
     { title: 'Id', field: 'id', type: 'string', editable: 'never' },
     { title: 'Title', field: 'title', type: 'string' },
@@ -92,12 +82,49 @@ export default function Table() {
 
   const [formData, changeFormData] = useState({
     id: '',
+    title: '',
     description: '',
     tags: '',
     query: '',
   });
 
-  const { id, description, tags, query } = formData;
+  const { id, title, description, tags, query } = formData;
+
+  let operation = 'add';
+  let editId = '-1';
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const saveAndClose = () => {
+    // Save the content of the form
+    console.log('So the data is the following:', formData, editId);
+    // changeFormData(rowData);
+
+    setData(
+      data.map((item) => {
+        if (item.id === editId) {
+          return {
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            tags: item.tags,
+            query: item.query,
+          };
+        }
+        return item;
+      })
+    );
+
+    handleClose();
+  };
 
   return (
     <div style={{ maxWidth: '100%' }}>
@@ -113,6 +140,8 @@ export default function Table() {
             icon: 'edit',
             tooltip: 'Edit',
             onClick: (_event, rowData) => {
+              operation = 'edit';
+              editId = rowData.id;
               changeFormData(rowData);
               handleClickOpen();
             },
@@ -187,6 +216,16 @@ export default function Table() {
               <TextField
                 autoFocus
                 margin="dense"
+                id="title"
+                label="Title"
+                type="text"
+                value={title}
+                fullWidth
+              />
+
+              <TextField
+                autoFocus
+                margin="dense"
                 id="description"
                 label="Description"
                 type="text"
@@ -226,7 +265,7 @@ export default function Table() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={saveAndClose} color="primary">
             Save
           </Button>
         </DialogActions>
