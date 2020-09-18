@@ -214,7 +214,6 @@ export default function Table() {
               />
 
               <TextField
-                autoFocus
                 margin="dense"
                 id="title"
                 label="Title"
@@ -224,7 +223,6 @@ export default function Table() {
               />
 
               <TextField
-                autoFocus
                 margin="dense"
                 id="description"
                 label="Description"
@@ -236,7 +234,6 @@ export default function Table() {
               />
 
               <TextField
-                autoFocus
                 margin="dense"
                 id="tags"
                 label="Tags"
